@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Restaurant</title>
+</head>
+<body>
+<h1>Restaurant Page</h1>
+
+<form action="/loginRestaurant" method="post">
+
+    <input type="text" name="username" placeholder="username" />
+
+    <input type="text" name="password" placeholder="password"/>
+
+    <input type="submit" name="" placeholder="" value="Log In"/>
+
+</form>
+<h2>Result Of Logination</h2>
+<h2 th:text="${resultOfLogination}"> </h2>
+
+<form action="/saveRestaurant" method="post">
+
+    <input type="text" name="username" placeholder="username" />
+
+    <input type="text" name="password" placeholder="password"/>
+
+    <input type="text" name="name" placeholder="name"/>
+
+    <input type="text" name="address" placeholder="address"/>
+
+    <input type="email" name="email" placeholder="email"/>
+
+    <input type="text" name="phoneNumber" placeholder="phoneNumber"/>
+
+    <input type="text" name="additionalInfo" placeholder="additionalInfo"/>
+
+    <input type="submit" name="" placeholder="" value="Sign In"/>
+
+</form>
+
+</body>
+</html>

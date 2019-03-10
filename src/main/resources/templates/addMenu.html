@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add Menu</title>
+</head>
+<body>
+
+<h1>Welcome:</h1>
+<h2 th:text="${restaurant.name}"> </h2>
+<h2 th:text="${restaurant.address}"> </h2>
+
+<h1>Add your Menu</h1>
+
+<form action="/saveMeal" method="post">
+
+    <input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>
+
+    <!--<li th:each="right: ${allRights}">-->
+        <!--<input type="checkbox"  th:field="*{rights}" th:value="${right.id}" th:text="${right.name}"/>-->
+    <!--&lt;!&ndash;</li>&ndash;&gt;-->
+    <!--<input type="checkbox" name="myBooleanVariable" th:checked="${myBooleanVariable}"/>-->
+    <select>
+        <option th:each="menuSection : ${menuSections}"
+                th:value="${menuSection}"
+                th:text="${menuSection}">
+        </option>
+    </select>
+
+    <input type="text" name="name" placeholder="name"/>
+
+    <input type="text" name="description" placeholder="description"/>
+
+    <input type="text" name="quantity" placeholder="quantity"/>
+
+    <input type="text" name="price" placeholder="price"/>
+
+    <input type="submit" name="" placeholder="" value="Add to my Menu"/>
+
+</form>
+
+</body>
+</html>
