@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create Menu Sections</title>
+</head>
+<body>
+
+<h1>Welcome:</h1>
+<h2 th:text="${restaurant.name}"> </h2>
+
+<h1> Create Sections (types of meals) to your Menu up to 10 sections</h1>
+
+<form action="/saveMenuSections" method="post">
+
+    <ul>
+        <li th:each="menuSection : ${menuSections}">
+            <input type="text" th:name="${menuSection}"
+                   th:text="${menuSection}"/>
+            <!--th:value="${menuSection}"-->
+        </li>
+    </ul>
+
+    <input type="submit" name="" placeholder="" value="Create Sections"/>
+
+</form>
+
+</body>
+</html>
+
