@@ -7,22 +7,43 @@
 <body>
 
 <h1>Welcome:</h1>
-<h2 th:text="${restaurant.name}"> </h2>
+<h2 th:text="${restaurant.name}" > </h2>
 
-<h1> Create Sections (types of meals) to your Menu up to 10 sections</h1>
+<h1> Add Sections (types of meals) to your Menu </h1>
 
 <form action="/saveMenuSections" method="post">
 
-    <ul>
-        <li th:each="menuSection : ${menuSections}">
-            <input type="text" th:name="${menuSection}"
-                   th:text="${menuSection}"/>
-            <!--th:value="${menuSection}"-->
-        </li>
-    </ul>
+    <input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>
+    <!--if there is a List<String> in the controller - than use it:-->
+    <!--model.addAttribute("menuSections", menuSections);-->
+    <!--<ul>-->
+        <!--<li th:each="menuSection : ${menuSections}">-->
+            <!--<input type="text" th:name="${menuSection}"-->
+                   <!--th:text="${menuSection}"/>-->
+        <!--</li>-->
+    <!--</ul>-->
 
-    <input type="submit" name="" placeholder="" value="Create Sections"/>
+    <input type="text" name="sectionName" placeholder="sectionName"/>
 
+    <input type="submit" name="" placeholder="" value="Create a Section of Menu"/>
+
+</form>
+
+<h2>The sections of your Menu:</h2>
+
+<ul>
+    <li th:each="m : ${menuSections}">
+        <p th:text="${m}"></p>
+     </li>
+</ul>
+
+<form action="/goToMenu" method="get">
+    <input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>
+    <input type="submit" name="" placeholder="" value="Add a meal to my Menu"/>
+</form>
+<form action="/watchToMenu" method="post">
+    <input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>
+    <input type="submit" name="" placeholder="" value="Watch All Menu"/>
 </form>
 
 </body>

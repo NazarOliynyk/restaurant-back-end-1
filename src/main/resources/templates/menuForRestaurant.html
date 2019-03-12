@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Menu for a Restaurant</title>
+</head>
+<body>
+<ul>
+    <li th:each="meal : ${meals}">
+        <p th:text="${meal.getMenuSection().name+', '+meal.name+', '+meal.description+', '+meal.price}"></p>
+    </li>
+</ul>
+
+</body>
+</html>

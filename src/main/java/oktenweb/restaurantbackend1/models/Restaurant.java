@@ -1,6 +1,8 @@
 package oktenweb.restaurantbackend1.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -11,24 +13,35 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"menu"})
+@ToString(exclude = {"meals", "menuSections"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String username;
-    private String password;
-    private String name;
-    private String address;
-    private String email;
-    private String phoneNumber;
-    private String additionalInfo;
+     int id;
+     String username;
+     String password;
+     String name;
+     String address;
+     String email;
+     String phoneNumber;
+     String additionalInfo;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @JsonIgnore
+    @OneToMany(
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "restaurant")
-    List<Meal> menu = new ArrayList<>();
+            mappedBy = "restaurant"
+    )
+    List<Meal> meals = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "restaurant"
+    )
+    List<MenuSection> menuSections = new ArrayList<>();
 }

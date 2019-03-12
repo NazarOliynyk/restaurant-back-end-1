@@ -1,30 +1,37 @@
 package oktenweb.restaurantbackend1.models;
 
-public enum MenuSection {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-    A_MEAL(""),
-    B_MEAL(""),
-    C_MEAL(""),
-    D_MEAL(""),
-    E_MEAL(""),
-    F_MEAL(""),
-    J_MEAL(""),
-    H_MEAL(""),
-    K_MEAL(""),
-    L_MEAL("");
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+@ToString(exclude = {"restaurant", "meals"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
-    public String name;
-     MenuSection(String name) {
-        this.name= name;
-    }
-//    APPETIZER,
-//    SALAD,
-//    FIRST_COURSE,
-//    MAIN_COURSE,
-//    STRONG_DRINK,
-//    SOFT_DRINK,
-//    HOT_DRINK,
-//    DESSERT,
-//    OTHER
+public class MenuSection {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    String name;
+
+    @ManyToOne(cascade = CascadeType.DETACH,
+            fetch = FetchType.LAZY)
+    Restaurant restaurant;
+
+    @JsonIgnore
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "menuSection"
+    )
+    List<Meal> meals = new ArrayList<>();
 }

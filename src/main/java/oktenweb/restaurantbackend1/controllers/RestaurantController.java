@@ -1,6 +1,7 @@
 package oktenweb.restaurantbackend1.controllers;
 
 import oktenweb.restaurantbackend1.dao.MealDAO;
+import oktenweb.restaurantbackend1.dao.MenuSectionDAO;
 import oktenweb.restaurantbackend1.dao.RestaurantDAO;
 import oktenweb.restaurantbackend1.models.Meal;
 import oktenweb.restaurantbackend1.models.MenuSection;
@@ -8,10 +9,13 @@ import oktenweb.restaurantbackend1.models.Restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -21,6 +25,10 @@ public class RestaurantController {
     private RestaurantDAO restaurantDAO;
     @Autowired
     private MealDAO mealDAO;
+    @Autowired
+    private MenuSectionDAO menuSectionDAO;
+
+    private Restaurant restaurantChosen = new Restaurant();
 
     @PostMapping("/saveRestaurant")
     public String saveRestaurant(
@@ -80,8 +88,6 @@ public class RestaurantController {
 //        return  ret;
 //    }
 
-    private Restaurant restaurantChosen = new Restaurant();
-    private List<MenuSection> menuSectionsEnum = new ArrayList<>();
 
     @PostMapping("/loginRestaurant")
     public String loginRestaurant(Model model,
@@ -89,33 +95,36 @@ public class RestaurantController {
                                   @RequestParam("password") String password
     ){
         String ret="";
-        List<Restaurant> restaurantList = new ArrayList<>();
+        List<Restaurant> restaurantList ;
         restaurantList = restaurantDAO.findAll();
         for (Restaurant restaurant : restaurantList) {
             if(restaurant.getUsername().equals(username)&&
                     restaurant.getPassword().equals(password)){
                 model.addAttribute("restaurant", restaurant);
                 restaurantChosen = restaurant;
+                List<MenuSection> menuSectionObjects = null;
+                menuSectionObjects = restaurantChosen.getMenuSections();
+
                 List<String> menuSections = new ArrayList<>();
-                menuSections.add("Section A");
-                menuSections.add("Section B");
-                menuSections.add("Section C");
-                menuSections.add("Section D");
-                menuSections.add("Section E");
-                menuSections.add("Section F");
-                menuSections.add("Section J");
-                menuSections.add("Section H");
-                menuSections.add("Section K");
-                menuSections.add("Section L");
-
+                if(menuSectionObjects == null){
+                    menuSections.add("No Menu Sections added yet!");
+                }else {
+                    for (MenuSection menuSectionObject : menuSectionObjects) {
+                        menuSections.add(menuSectionObject.getName());
+                    }
+                }
                 model.addAttribute("menuSections", menuSections);
-
-                // just to try how it saves enum - looks like as numbers
-//                Meal meal1 = new Meal();
-//                meal1.setMenuSection(MenuSection.A_MEAL);
-//                meal1.setName("GGGGG");
-//                mealDAO.save(meal1);
-
+//                List<String> menuSections = new ArrayList<>();
+//                menuSections.add("Section A");
+//                menuSections.add("Section B");
+//                menuSections.add("Section C");
+//                menuSections.add("Section D");
+//                menuSections.add("Section E");
+//                menuSections.add("Section F");
+//                menuSections.add("Section J");
+//                menuSections.add("Section H");
+//                menuSections.add("Section K");
+//                menuSections.add("Section L");
                 ret = "createMenuSections";
                 break;
             }else {
@@ -128,51 +137,31 @@ public class RestaurantController {
 
     @PostMapping("/saveMenuSections")
     public String saveMenuSections( Model model,
-                                    @RequestParam("Section A") String a,
-                                   @RequestParam("Section B") String b,
-                                   @RequestParam("Section C") String c,
-                                   @RequestParam("Section D") String d,
-                                   @RequestParam("Section E") String e,
-                                   @RequestParam("Section F") String f,
-                                   @RequestParam("Section J") String j,
-                                   @RequestParam("Section H") String h,
-                                   @RequestParam("Section K") String k,
-                                   @RequestParam("Section L") String l){
+                                    @RequestParam("sectionName") String sectionName,
+                                    @RequestParam("restaurantName") String restaurantName
+                                  ){
+
+        MenuSection menuSection = new MenuSection();
+        menuSection.setName(sectionName);
+        restaurantChosen = restaurantDAO.findRestaurantByName(restaurantName);
+        menuSection.setRestaurant(restaurantChosen);
+        menuSectionDAO.save(menuSection);
+
+        List<MenuSection> menuSectionObjects = null;
+        menuSectionObjects = restaurantChosen.getMenuSections();
         List<String> menuSections = new ArrayList<>();
-        menuSections.add(a);
-        menuSections.add(b);
-        menuSections.add(c);
-        menuSections.add(d);
-        menuSections.add(e);
-        menuSections.add(f);
-        menuSections.add(j);
-        menuSections.add(h);
-        menuSections.add(k);
-        menuSections.add(l);
-
-        menuSectionsEnum.add(MenuSection.A_MEAL);
-        menuSectionsEnum.add(MenuSection.B_MEAL);
-        menuSectionsEnum.add(MenuSection.C_MEAL);
-        menuSectionsEnum.add(MenuSection.D_MEAL);
-        menuSectionsEnum.add(MenuSection.E_MEAL);
-        menuSectionsEnum.add(MenuSection.F_MEAL);
-        menuSectionsEnum.add(MenuSection.J_MEAL);
-        menuSectionsEnum.add(MenuSection.H_MEAL);
-        menuSectionsEnum.add(MenuSection.K_MEAL);
-        menuSectionsEnum.add(MenuSection.L_MEAL);
-
-        for (int i = 0; i < menuSections.size(); i++) {
-             if(!menuSections.get(i).equals("")){
-                 menuSectionsEnum.get(i).name = menuSections.get(i);
-             }
-        }
-        for (MenuSection menuSection : menuSectionsEnum) {
-            System.out.println(menuSection.name);
+        if(menuSectionObjects == null){
+            menuSections.add("No Menu Sections added yet!");
+        }else {
+            for (MenuSection menuSectionObject : menuSectionObjects) {
+                menuSections.add(menuSectionObject.getName());
+            }
         }
 
-        model.addAttribute(model.addAttribute("restaurant", restaurantChosen));
+        model.addAttribute("restaurant", restaurantChosen);
         model.addAttribute("menuSections", menuSections);
-        return "addMenu";
+
+        return "createMenuSections";
     }
 
     @PostMapping("/saveMeal")
@@ -184,28 +173,65 @@ public class RestaurantController {
                            @RequestParam("price") String price
                            ){
         Meal meal = new Meal();
-        model.addAttribute(model.addAttribute("restaurant", restaurantChosen));
-        for (int i = 0; i< menuSectionsEnum.size(); i++) {
-            if(menuSectionsEnum.get(i).name.equals(menuSection)){
-                meal.setMenuSection(menuSectionsEnum.get(i));
+
+        List<MenuSection> menuSectionObjects = null;
+        menuSectionObjects = restaurantChosen.getMenuSections();
+        MenuSection menuSectionObject = new MenuSection();
+
+        for (MenuSection sectionObject : menuSectionObjects) {
+            if(sectionObject.getName().equals(menuSection)){
+                menuSectionObject = sectionObject;
             }
         }
-        System.out.println(meal.getMenuSection().toString());
+
         meal.setName(name);
         meal.setDescription(description);
         meal.setQuantity(quantity);
         meal.setPrice(Double.parseDouble(price));
-        Meal meal1 = new Meal();
-        meal1.setMenuSection(MenuSection.A_MEAL);
-        meal1.setName("GGGGG");
-        mealDAO.save(meal1);
-       // mealDAO.save(meal);
+        meal.setRestaurant(restaurantChosen);
+        meal.setMenuSection(menuSectionObject);
+        mealDAO.save(meal);
 
-        //List<Meal> meals = restaurantChosen.getMenu();
-        //meals.add(meal);
-        //restaurantChosen.setMenu(meals);
-        //restaurantDAO.save(restaurantChosen);
+        List<String> menuSections = new ArrayList<>();
+        if(menuSectionObjects == null){
+            menuSections.add("No Menu Sections added yet!");
+        }else {
+            for (MenuSection menuSectionObject1 : menuSectionObjects) {
+                menuSections.add(menuSectionObject1.getName());
+            }
+        }
+
+        model.addAttribute("restaurant", restaurantChosen);
+        model.addAttribute("menuSections", menuSections);
         return "addMenu";
+    }
+
+    @GetMapping("/goToMenu")
+    public String goToMenu(Model model,
+                           @RequestParam("restaurantName") String restaurantName){
+        restaurantChosen = restaurantDAO.findRestaurantByName(restaurantName);
+        List<MenuSection> menuSectionObjects = null;
+        menuSectionObjects = restaurantChosen.getMenuSections();
+        List<String> menuSections = new ArrayList<>();
+        if(menuSectionObjects == null){
+            menuSections.add("No Menu Sections added yet!");
+        }else {
+            for (MenuSection menuSectionObject : menuSectionObjects) {
+                menuSections.add(menuSectionObject.getName());
+            }
+        }
+        model.addAttribute("restaurant", restaurantChosen);
+        model.addAttribute("menuSections", menuSections);
+        return "addMenu";
+    }
+    @PostMapping("/watchToMenu")
+    public String watchToMenu(Model model,
+                              @RequestParam("restaurantName") String restaurantName){
+        restaurantChosen = restaurantDAO.findRestaurantByName(restaurantName);
+        List<Meal> meals = restaurantChosen.getMeals();
+        Collections.sort(meals);
+        model.addAttribute("meals", meals);
+        return "menuForRestaurant";
     }
 
 }

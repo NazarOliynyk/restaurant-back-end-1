@@ -7,6 +7,7 @@
 <body>
 <h1>Restaurant Page</h1>
 
+<h3>Log into: </h3>
 <form action="/loginRestaurant" method="post">
 
     <input type="text" name="username" placeholder="username" />
@@ -16,8 +17,10 @@
     <input type="submit" name="" placeholder="" value="Log In"/>
 
 </form>
-<h2>Result Of Logination</h2>
-<h2 th:text="${resultOfLogination}"> </h2>
+<h4>Result Of Logination</h4>
+<h4 th:text="${resultOfLogination}"> </h4>
+<h3>Or Create an account of a New Restaurant:</h3>
+<h5>(fill in general info about your restaurant and your data for further loginations- username and password)</h5>
 
 <form action="/saveRestaurant" method="post">
 

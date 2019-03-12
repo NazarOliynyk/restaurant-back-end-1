@@ -1,6 +1,7 @@
 package oktenweb.restaurantbackend1.models;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
@@ -8,22 +9,30 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"restaurant"})
-
-public class Meal {
+@ToString(exclude = {"restaurant", "menuSection"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Meal implements Comparable<Meal>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private MenuSection menuSection;
-    private String name;
-    private String description;
-    private String quantity;
-    private double price;
+     int id;
+     String name;
+     String description;
+     String quantity;
+     double price;
 
-    @ManyToOne(cascade = CascadeType.ALL,
+    @ManyToOne(cascade = CascadeType.DETACH,
             fetch = FetchType.LAZY)
-    private Restaurant restaurant;
+     Restaurant restaurant;
+
+    @ManyToOne(cascade = CascadeType.DETACH,
+            fetch = FetchType.LAZY)
+    MenuSection menuSection;
+
+    @Override
+    public int compareTo(Meal o) {
+        return this.getMenuSection().getId() - o.getMenuSection().getId();
+    }
+
 }

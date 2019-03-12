@@ -4,4 +4,5 @@ import oktenweb.restaurantbackend1.models.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RestaurantDAO extends JpaRepository<Restaurant, Integer>{
+    Restaurant findRestaurantByName(String name);
 }
