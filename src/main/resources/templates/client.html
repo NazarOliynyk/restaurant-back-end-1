@@ -2,11 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>Client</title>
 </head>
 <body>
 <h1>Client Page</h1>
-<h3>Not ready yet</h3>
+
+<h3>Log into: </h3>
+<form action="/loginClient" method="post">
+
+    <input type="text" name="username" placeholder="username" />
+
+    <input type="text" name="password" placeholder="password"/>
+
+    <input type="submit" name="" placeholder="" value="Log In"/>
+
+</form>
+<h6><i>Result Of Logination:</i></h6>
+<h4 th:text="${resultOfLogination}"> </h4>
+<h3>Or Create an account of a New Client:</h3>
+<h5>(fill in your email and your data for further loginations- username and password)</h5>
+
+<form action="/saveClient" method="post">
+
+    <input type="text" name="username" placeholder="username" />
+
+    <input type="text" name="password" placeholder="password"/>
+
+    <input type="email" name="email" placeholder="email"/>
+
+    <input type="submit" name="" placeholder="" value="Sign In"/>
+
+</form>
 
 </body>
 </html>

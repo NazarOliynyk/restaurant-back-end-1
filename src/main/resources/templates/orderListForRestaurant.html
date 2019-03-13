@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Order List For Restaurant</title>
+</head>
+<body>
+<h4>The List of all your  orders: </h4>
+<ul>
+    <li th:each="o : ${orders}">
+        <p th:text="${o.date}"></p>
+        <p th:text="${o.orderStatus}"></p>
+        <p>List of meals for this order:
+    <li th:each="meal : ${o.getMeals()}">
+        <p th:text="${meal.menuSection.name}"></p>
+        <p th:text="${meal.name}"></p>
+        <p th:text="${meal.description}"></p>
+        <p th:text="${meal.quantity}"></p>
+        <p th:text="${meal.price}"></p>
+
+    </li>
+    </p>
+    </li>
+</ul>
+
+</body>
+</html>

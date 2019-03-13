@@ -8,30 +8,37 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Menusections")
+@Entity(name = "Clients")
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
-@ToString(exclude = {"restaurant", "meals"})
+@EqualsAndHashCode
+@ToString(exclude = {"orders"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class MenuSection {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    String name;
-
-    @ManyToOne(cascade = CascadeType.DETACH,
-            fetch = FetchType.LAZY)
-    Restaurant restaurant;
+    String username;
+    String password;
+    String email;
 
     @JsonIgnore
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "menuSection"
+            mappedBy = "client"
     )
-    List<Meal> meals = new ArrayList<>();
+    List<OrderMeal> orders = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "clients"
+    )
+    List<Restaurant> restaurants = new ArrayList<>();
+
 }

@@ -6,32 +6,33 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@Entity(name = "Meals")
+@Entity(name = "Orders")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"restaurant", "menuSection"})
+@ToString(exclude = {"meals"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Meal implements Comparable<Meal>{
+public class OrderMeal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     int id;
-     String name;
-     String description;
-     String quantity;
-     double price;
+    private int id;
+    Date date;
+    String reasonOfCancelation;
+    @Enumerated(EnumType.STRING)
+    OrderStatus orderStatus;
 
     @ManyToOne(cascade = CascadeType.DETACH,
             fetch = FetchType.LAZY)
-     Restaurant restaurant;
+    Client client;
 
     @ManyToOne(cascade = CascadeType.DETACH,
             fetch = FetchType.LAZY)
-    MenuSection menuSection;
+    Restaurant restaurant;
 
     @JsonIgnore
     @ManyToMany(
@@ -39,14 +40,8 @@ public class Meal implements Comparable<Meal>{
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             },
-            fetch = FetchType.EAGER,
-            mappedBy = "meals"
+            fetch = FetchType.EAGER
+            //mappedBy = "orders"
     )
-    List<OrderMeal> orders = new ArrayList<>();
-
-    @Override
-    public int compareTo(Meal o) {
-        return this.getMenuSection().getId() - o.getMenuSection().getId();
-    }
-
+    List<Meal> meals = new ArrayList<>();
 }

@@ -9,12 +9,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "Restaurants")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"meals", "menuSections"})
+@ToString(exclude = {"meals", "menuSections", "orders", "clients"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Restaurant {
 
@@ -44,4 +44,20 @@ public class Restaurant {
             mappedBy = "restaurant"
     )
     List<MenuSection> menuSections = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "restaurant"
+    )
+    List<OrderMeal> orders = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+            // mappedBy = "orders"
+    )
+    List<Client> clients = new ArrayList<>();
 }

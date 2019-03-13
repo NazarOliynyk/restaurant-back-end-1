@@ -5,6 +5,7 @@ import oktenweb.restaurantbackend1.dao.MenuSectionDAO;
 import oktenweb.restaurantbackend1.dao.RestaurantDAO;
 import oktenweb.restaurantbackend1.models.Meal;
 import oktenweb.restaurantbackend1.models.MenuSection;
+import oktenweb.restaurantbackend1.models.OrderMeal;
 import oktenweb.restaurantbackend1.models.Restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -232,6 +233,15 @@ public class RestaurantController {
         Collections.sort(meals);
         model.addAttribute("meals", meals);
         return "menuForRestaurant";
+    }
+
+    @PostMapping("/watchMyOrders")
+    public String watchMyOrders(Model model,
+                                @RequestParam("restaurantName") String restaurantName){
+        Restaurant restaurant = restaurantDAO.findRestaurantByName(restaurantName);
+        List<OrderMeal> orders = restaurant.getOrders();
+        model.addAttribute("orders", orders);
+        return "orderListForRestaurant";
     }
 
 }

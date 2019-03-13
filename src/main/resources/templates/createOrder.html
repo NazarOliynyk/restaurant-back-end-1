@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create Order</title>
+</head>
+<body>
+<h1>Welcome:</h1>
+<h2 th:text="${client.username}" >Your Login: </h2>
+
+<h1> Choose the Restaurant: </h1>
+
+<ul>
+    <li th:each="restaurant : ${restaurants}">
+        <p th:text="${restaurant.name}"></p>
+        <p th:text="${restaurant.address}"></p>
+        <p th:text="${restaurant.additionalInfo}"></p>
+        <div>
+            <a th:href="@{'goToRestaurant-'+${restaurant.id}}">
+                <button> Go this RESTAURANT </button>
+            </a>
+        </div>
+    </li>
+</ul>
+
+<h4>The List of your previous orders: </h4>
+<ul>
+    <li th:each="o : ${orders}">
+        <p th:text="${o.date}"></p>
+        <p th:text="${o.orderStatus}"></p>
+        <p>List of meals for this order:
+            <li th:each="meal : ${o.getMeals()}">
+                <p th:text="${meal.menuSection.name}"></p>
+                <p th:text="${meal.name}"></p>
+                <p th:text="${meal.description}"></p>
+                <p th:text="${meal.quantity}"></p>
+                <p th:text="${meal.price}"></p>
+
+            </li>
+        </p>
+    </li>
+</ul>
+
+
+</body>
+</html>

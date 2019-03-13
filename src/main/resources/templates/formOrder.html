@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Form Order</title>
+</head>
+<body>
+<h2> Yoy have chosen following meals: </h2>
+<h4>From the restaurant</h4>
+<h4 th:text="${restaurant.name}" >Your Login: </h4>
+<ul>
+    <li th:each="meal : ${mealsCreated}">
+        <p th:text="${meal.menuSection.name}">menu Section: </p>
+        <p th:text="${meal.name}">meal name: </p>
+        <p th:text="${meal.description}">description: </p>
+        <p th:text="${meal.quantity}">quantity: </p>
+        <p th:text="${meal.price}">price: </p>
+    </li>
+</ul>
+<form action="/goToMenuForClient" method="get">
+    <!--<input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>-->
+    <input type="submit" name="" placeholder="" value="Add yet another meal to my ORDER"/>
+</form>
+<form action="/saveOrder" method="get">
+    <!--<input type="hidden" name="restaurantName" placeholder="restaurantName" th:value="${restaurant.name}"/>-->
+    <input type="submit" name="" placeholder="" value="saveOrder"/>
+</form>
+
+
+</body>
+</html>
