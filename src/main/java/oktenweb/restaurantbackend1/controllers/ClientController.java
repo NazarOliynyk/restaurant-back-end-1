@@ -29,55 +29,7 @@ public class ClientController {
     private Client clientChosen = new Client();
     private Restaurant restaurantChosen = new Restaurant();
     private List<Meal> mealsCreated = new ArrayList<>();
-
-    //@PostMapping("/loginClient")
-    public String loginClient(){
-//        Client client = new Client();
-//        client.setUsername("ccc");
-//        client.setPassword("ccc");
-//        client.setEmail("naz@ukr.net");
-//        clientDAO.save(client);
-//        Restaurant restaurant = new Restaurant();
-//        restaurant = restaurantDAO.findRestaurantByName("Tower");
-//        Client clientChosen = new Client();
-//        clientChosen = clientDAO.findClientByUsername("ccc");
-//        List<Client> clients = restaurant.getClients();
-//        clients.add(clientChosen);
-//        restaurant.setClients(clients);
-//        restaurantDAO.save(restaurant);
-
-        OrderMeal order = new OrderMeal();
-        order.setOrderStatus(OrderStatus.IN_PROCESS);
-        order.setDate(new Date());
-        Restaurant restaurant = new Restaurant();
-        restaurant = restaurantDAO.findRestaurantByName("Tower");
-        Client clientChosen = new Client();
-        clientChosen = clientDAO.findClientByUsername("ccc");
-        order.setRestaurant(restaurant);
-        order.setClient(clientChosen);
-//        Meal meal1 = new Meal();
-//        meal1 = mealDAO.findOne(2);
-//        List<OrderMeal> orders1 = new ArrayList<>();
-//        orders1 =meal1.getOrders();
-
-        Meal meal2 = new Meal();
-        meal2 = mealDAO.findOne(5);
-        List<OrderMeal> orders2 = new ArrayList<>();
-        orders2 =meal2.getOrders();
-
-        //orders1.add(order);
-        orders2.add(order);
-        //meal1.setOrders(orders1);
-       meal2.setOrders(orders2);
-        //mealDAO.save(meal1);
-        mealDAO.save(meal2);
-//        meals.add(meal1);
-//        meals.add(meal2);
-//        order.setMeals(meals);
-  //      orderMealDAO.save(order);
-
-        return "client";
-    }
+    private OrderMeal orderChosen = new OrderMeal();
 
     @PostMapping("/saveClient")
     public String saveClient(@RequestParam("username") String username,
@@ -108,6 +60,7 @@ public class ClientController {
                 clientChosen = client;
                 List<OrderMeal> orders = null;
                 orders = clientChosen.getOrders();
+                Collections.sort(orders);
                 if(orders == null){
                    model.addAttribute("orders", "No orders yet!");
                 }else {
@@ -129,13 +82,18 @@ public class ClientController {
                                            Model model)
         {
             System.out.println("restaurant.getName(): "+restaurantId);
-            //Restaurant restaurant = new Restaurant();
+
             restaurantChosen = restaurantDAO.findOne(restaurantId);
             model.addAttribute("restaurant", restaurantChosen);
             List<Meal> meals = new ArrayList<>();
             meals = restaurantChosen.getMeals();
             Collections.sort(meals);
             model.addAttribute("meals", meals);
+            orderChosen.setOrderStatus(OrderStatus.JUST_ORDERED);
+            orderChosen.setDate(new Date());
+            orderChosen.setRestaurant(restaurantChosen);
+            orderChosen.setClient(clientChosen);
+            orderMealDAO.save(orderChosen);
 
         return "menuForClient";
         }
@@ -147,6 +105,16 @@ public class ClientController {
             System.out.println("restaurant.getName(): "+mealId);
             Meal meal = new Meal();
             meal = mealDAO.findOne(mealId);
+            OrderMeal order = orderMealDAO.findOne(orderChosen.getId());
+            List<Meal> meals = order.getMeals();
+            meals.add(meal);
+            order.setMeals(meals);
+            orderMealDAO.save(order);
+            List<OrderMeal> orderList = new ArrayList<>();
+            orderList = meal.getOrders();
+            orderList.add(order);
+            meal.setOrders(orderList);
+            mealDAO.save(meal);
             mealsCreated.add(meal);
             model.addAttribute("restaurant", restaurantChosen);
             model.addAttribute("mealsCreated", mealsCreated);
@@ -166,20 +134,7 @@ public class ClientController {
 
         @GetMapping("/saveOrder")
         public String saveOrder(Model model){
-            OrderMeal order = new OrderMeal();
-            order.setOrderStatus(OrderStatus.JUST_ORDERED);
-            order.setDate(new Date());
-            order.setRestaurant(restaurantChosen);
-            order.setClient(clientChosen);
-            order.setMeals(mealsCreated);
 
-            for (Meal meal : mealsCreated) {
-                List<OrderMeal> orderList = new ArrayList<>();
-                orderList = meal.getOrders();
-                orderList.add(order);
-                meal.setOrders(orderList);
-                mealDAO.save(meal);
-            }
             model.addAttribute("restaurant", restaurantChosen);
             model.addAttribute("mealsCreated", mealsCreated);
             model.addAttribute("client", clientChosen);
@@ -188,6 +143,31 @@ public class ClientController {
             model.addAttribute("orders", orderMeals);
             return "createOrder";
         }
+    @GetMapping("/confirmServed-{xxx}")
+    public String cancelOrderByRestaurant(Model model,
+                                          @PathVariable("xxx") int orderId  ) {
+        OrderMeal order = orderMealDAO.findOne(orderId);
+        order.setOrderStatus(OrderStatus.SERVED);
+        orderMealDAO.save(order);
 
+        return "index";
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/deleteOrderByClient-{xxx}")
+    public String deleteOrderByClient(Model model,
+                                          @PathVariable("xxx") int orderId  ) {
+       OrderMeal order = orderMealDAO.findOne(orderId);
+        System.out.println(order.toString());
+        List<Meal> meals = order.getMeals();
+        for (Meal meal : meals) {
+            List<OrderMeal> orders = meal.getOrders();
+            orders.remove(order);
+            meal.setOrders(orders);
+            mealDAO.save(meal);
+        }
+        orderMealDAO.delete(orderId);
+
+        return "index";
+    }
 
 }

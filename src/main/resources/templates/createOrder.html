@@ -35,8 +35,17 @@
                 <p th:text="${meal.description}"></p>
                 <p th:text="${meal.quantity}"></p>
                 <p th:text="${meal.price}"></p>
-
             </li>
+    <div>
+        <a th:href="@{'confirmServed-'+${o.id}}">
+            <button> Confirm that you have been Served correctly </button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{'deleteOrderByClient-'+${o.id}}">
+            <button> Delete Order </button>
+        </a>
+    </div>
         </p>
     </li>
 </ul>

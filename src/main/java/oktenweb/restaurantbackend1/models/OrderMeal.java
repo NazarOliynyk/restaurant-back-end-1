@@ -16,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString(exclude = {"meals"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderMeal {
+public class OrderMeal implements Comparable<OrderMeal>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,4 +44,9 @@ public class OrderMeal {
             //mappedBy = "orders"
     )
     List<Meal> meals = new ArrayList<>();
+
+    @Override
+    public int compareTo(OrderMeal o) {
+        return this.getOrderStatus().compareTo(o.getOrderStatus());
+    }
 }

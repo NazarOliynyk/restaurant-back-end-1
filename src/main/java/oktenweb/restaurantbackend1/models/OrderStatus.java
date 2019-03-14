@@ -6,6 +6,7 @@ package oktenweb.restaurantbackend1.models;
 public enum OrderStatus {
     CANCELED_BY_CLIENT,
     CANCELED_BY_RESTAURANT,
-    IN_PROCESS,
-    JUST_ORDERED
+    SERVED,
+    JUST_ORDERED,
+    IN_PROCESS
 }

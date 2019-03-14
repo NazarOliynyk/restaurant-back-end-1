@@ -17,9 +17,19 @@
         <p th:text="${meal.description}"></p>
         <p th:text="${meal.quantity}"></p>
         <p th:text="${meal.price}"></p>
-
     </li>
     </p>
+    <div>
+        <a th:href="@{'acceptOrderToKitchen-'+${o.id}}">
+            <button> Accept Order</button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{'cancelOrderByRestaurant-'+${o.id}}">
+            <!--<input type="text" name="reasonOfCancelation" placeholder="reasonOfCancelation"/>-->
+            <button> Cancel Order</button>
+        </a>
+    </div>
     </li>
 </ul>
 

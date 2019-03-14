@@ -45,7 +45,8 @@ public class Meal implements Comparable<Meal>{
     List<OrderMeal> orders = new ArrayList<>();
 
     @Override
-    public int compareTo(Meal o) {
+    public int compareTo(Meal o)
+    {
         return this.getMenuSection().getId() - o.getMenuSection().getId();
     }
 
