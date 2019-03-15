@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Menu for Client</title>
 </head>
 <body>
-<h2>Select meals from this menu of RESTAURANT: </h2>
-<h4 th:text="${restaurant.name}" >Your Login: </h4>
+<h3>Select meals from this menu of RESTAURANT: </h3>
+<h5 th:text="${restaurant.name}" >Your Login: </h5>
 <ul>
     <li th:each="meal : ${meals}">
         <p th:text="${meal.menuSection.name}">menu Section: </p>

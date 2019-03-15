@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Restaurant</title>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <h6><i>Result Of Logination:</i></h6>
 <h4 th:text="${resultOfLogination}"> </h4>
 <h3>Or Create an account of a New Restaurant:</h3>
-<h5>(fill in general info about your restaurant and your data for further loginations- username and password)</h5>
+<h5>fill in general info about your restaurant and your data(username and password) for further loginations: </h5>
 
 <form action="/saveRestaurant" method="post">
 
@@ -28,13 +29,13 @@
 
     <input type="text" name="password" placeholder="password"/>
 
-    <input type="text" name="name" placeholder="name"/>
+    <input type="text" name="name" placeholder="Restaurant Name"/>
 
-    <input type="text" name="address" placeholder="address"/>
+    <input type="text" name="address" placeholder="Restaurant Address"/>
 
-    <input type="email" name="email" placeholder="email"/>
+    <input type="email" name="email" placeholder="Restaurant email"/>
 
-    <input type="text" name="phoneNumber" placeholder="phoneNumber"/>
+    <input type="text" name="phoneNumber" placeholder="Restaurant phoneNumber"/>
 
     <input type="text" name="additionalInfo" placeholder="additionalInfo"/>
 

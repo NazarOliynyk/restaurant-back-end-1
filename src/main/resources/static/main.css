@@ -1,0 +1,33 @@
+body{
+    background-color: silver;
+}
+p{
+    font-size: xx-small;
+    background-color: bisque;
+    width: 80%;
+
+}
+div{
+    font-size: small;
+    width: 80%;
+
+
+}
+ul{
+    background-color: aquamarine;
+    width: 80%;
+
+}
+li{
+    background-color: lemonchiffon;
+    width: 80%;
+
+}
+h1, h2, h3, h5, h6{
+    background-color: darksalmon;
+    width: 80%;
+
+}
+h4{
+    background-color: red;
+}

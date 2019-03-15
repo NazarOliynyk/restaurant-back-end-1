@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Form Order</title>
 </head>
 <body>
 <h2> Yoy have chosen following meals: </h2>
-<h4>From the restaurant</h4>
-<h4 th:text="${restaurant.name}" >Your Login: </h4>
+<h3>From the restaurant</h3>
+<h3 th:text="${restaurant.name}" >Your Login: </h3>
 <ul>
     <li th:each="meal : ${mealsCreated}">
         <p th:text="${meal.menuSection.name}">menu Section: </p>

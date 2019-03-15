@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Order List For Restaurant</title>
 </head>
 <body>
-<h4>The List of all your  orders: </h4>
+<h3>The List of all your  orders: </h3>
 <ul>
     <li th:each="o : ${orders}">
+        <p> - Client Login : </p>
+        <p th:text="${o.getClient().getUsername()}"></p>
+        <p> - Order date: </p>
         <p th:text="${o.date}"></p>
+        <p> - Current status: </p>
         <p th:text="${o.orderStatus}"></p>
-        <p>List of meals for this order:
+        <p> - Client positive rating: </p>
+        <p th:text="${o.getClient().getNumberOfPositiveResp()}"></p>
+        <p> - Client negative rating: </p>
+        <p th:text="${o.getClient().getNumberOfNegativeResp()}"></p>
+        <h5>List of meals for this order:
     <li th:each="meal : ${o.getMeals()}">
         <p th:text="${meal.menuSection.name}"></p>
         <p th:text="${meal.name}"></p>
@@ -18,7 +27,7 @@
         <p th:text="${meal.quantity}"></p>
         <p th:text="${meal.price}"></p>
     </li>
-    </p>
+    </h5>
     <div>
         <a th:href="@{'acceptOrderToKitchen-'+${o.id}}">
             <button> Accept Order</button>
@@ -30,8 +39,21 @@
             <button> Cancel Order</button>
         </a>
     </div>
+    <div>
+        <a th:href="@{'negativeResponseFromRestaurant-'+${o.id}}">
+            <button> Add Negative Response </button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{'positiveResponseFromRestaurant-'+${o.id}}">
+            <button> Add Positive Response </button>
+        </a>
+    </div>
     </li>
 </ul>
 
+<form action="/restaurants" method="get">
+    <input type="submit" name="" placeholder="" value="Get Back to Restraunt page "/>
+</form>
 </body>
 </html>

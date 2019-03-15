@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Create Menu Sections</title>
 </head>
 <body>
@@ -9,7 +10,7 @@
 <h1>Welcome:</h1>
 <h2 th:text="${restaurant.name}" >Restaurant name:  </h2>
 
-<h1> Add Sections (types of meals) to your Menu </h1>
+<h3> Add Sections (types of meals) to your Menu </h3>
 
 <form action="/saveMenuSections" method="post">
 

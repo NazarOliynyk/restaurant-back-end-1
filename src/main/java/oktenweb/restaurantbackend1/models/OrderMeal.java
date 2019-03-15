@@ -25,6 +25,12 @@ public class OrderMeal implements Comparable<OrderMeal>{
     String reasonOfCancelation;
     @Enumerated(EnumType.STRING)
     OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    ResponseType responseFromClient;
+    @Enumerated(EnumType.STRING)
+    ResponseType responseFromRestaurant;
+    String descriptionFromClient;
+    String descriptionFromRestaurant;
 
     @ManyToOne(cascade = CascadeType.DETACH,
             fetch = FetchType.LAZY)

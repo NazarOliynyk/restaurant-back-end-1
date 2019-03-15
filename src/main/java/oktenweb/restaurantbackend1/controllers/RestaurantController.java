@@ -1,9 +1,6 @@
 package oktenweb.restaurantbackend1.controllers;
 
-import oktenweb.restaurantbackend1.dao.MealDAO;
-import oktenweb.restaurantbackend1.dao.MenuSectionDAO;
-import oktenweb.restaurantbackend1.dao.OrderMealDAO;
-import oktenweb.restaurantbackend1.dao.RestaurantDAO;
+import oktenweb.restaurantbackend1.dao.*;
 import oktenweb.restaurantbackend1.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +16,8 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantDAO restaurantDAO;
+    @Autowired
+    private ClientDAO clientDAO;
     @Autowired
     private MealDAO mealDAO;
     @Autowired
@@ -205,7 +204,7 @@ public class RestaurantController {
         order.setOrderStatus(OrderStatus.IN_PROCESS);
         orderMealDAO.save(order);
 
-        return "index";
+        return "restaurant";
     }
     @GetMapping("/cancelOrderByRestaurant-{xxx}")
     public String cancelOrderByRestaurant(Model model,
@@ -216,7 +215,50 @@ public class RestaurantController {
         order.setOrderStatus(OrderStatus.CANCELED_BY_RESTAURANT);
         orderMealDAO.save(order);
 
-        return "index";
+        return "restaurant";
+    }
+    @GetMapping("/negativeResponseFromRestaurant-{xxx}")
+    public String negativeResponseFromRestaurant(Model model,
+                                   @PathVariable("xxx") int orderId  ) {
+        OrderMeal order = orderMealDAO.findOne(orderId);
+        order.setResponseFromRestaurant(ResponseType.NEGATIVE);
+        Client client = order.getClient();
+        List<OrderMeal> negative = new ArrayList<>();
+        List<OrderMeal> positive = new ArrayList<>();
+        for (OrderMeal ord: client.getOrders()) {
+            if(ord.getResponseFromRestaurant().equals(ResponseType.NEGATIVE)){
+                negative.add(ord);
+            }else if(ord.getResponseFromRestaurant().equals(ResponseType.POSITIVE)){
+                positive.add(ord);}
+        }
+        client.setNumberOfNegativeResp(negative.size());
+        client.setNumberOfPositiveResp(positive.size());
+        clientDAO.save(client);
+        orderMealDAO.save(order);
+
+        return "restaurant";
+    }
+
+    @GetMapping("/positiveResponseFromRestaurant-{xxx}")
+    public String positiveResponseFromRestaurant(Model model,
+                                   @PathVariable("xxx") int orderId  ) {
+        OrderMeal order = orderMealDAO.findOne(orderId);
+        order.setResponseFromRestaurant(ResponseType.POSITIVE);
+        Client client = order.getClient();
+        List<OrderMeal> negative = new ArrayList<>();
+        List<OrderMeal> positive = new ArrayList<>();
+        for (OrderMeal ord: client.getOrders()) {
+            if(ord.getResponseFromRestaurant().equals(ResponseType.NEGATIVE)){
+                negative.add(ord);
+            }else if(ord.getResponseFromRestaurant().equals(ResponseType.POSITIVE)){
+                positive.add(ord);}
+        }
+        client.setNumberOfNegativeResp(negative.size());
+        client.setNumberOfPositiveResp(positive.size());
+        clientDAO.save(client);
+        orderMealDAO.save(order);
+
+        return "restaurant";
     }
 
 }

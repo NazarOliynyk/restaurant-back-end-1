@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Create Order</title>
 </head>
 <body>
@@ -12,23 +13,34 @@
 
 <ul>
     <li th:each="restaurant : ${restaurants}">
+        <p> - Restaurant name: </p>
         <p th:text="${restaurant.name}"></p>
+        <p> -  Restaurant address: </p>
         <p th:text="${restaurant.address}"></p>
+        <p> - Restaurant info: </p>
         <p th:text="${restaurant.additionalInfo}"></p>
+        <p> - Restaurant Positive rating: </p>
+        <p th:text="${restaurant.numberOfPositiveResp}"></p>
+        <p> - Restaurant Negaive rating: </p>
+        <p th:text="${restaurant.numberOfNegativeResp}"></p>
         <div>
             <a th:href="@{'goToRestaurant-'+${restaurant.id}}">
-                <button> Go this RESTAURANT </button>
+                <button> Go to this RESTAURANT </button>
             </a>
         </div>
     </li>
 </ul>
 
-<h4>The List of your previous orders: </h4>
+<h5>The List of your previous orders: </h5>
 <ul>
     <li th:each="o : ${orders}">
+        <p> - Restaurant name:</p>
+        <p th:text="${o.getRestaurant().getName()}"></p>
+        <p> - Order date:</p>
         <p th:text="${o.date}"></p>
+        <p> - Current Status: </p>
         <p th:text="${o.orderStatus}"></p>
-        <p>List of meals for this order:
+        <h5>List of meals for this order:
             <li th:each="meal : ${o.getMeals()}">
                 <p th:text="${meal.menuSection.name}"></p>
                 <p th:text="${meal.name}"></p>
@@ -36,9 +48,20 @@
                 <p th:text="${meal.quantity}"></p>
                 <p th:text="${meal.price}"></p>
             </li>
+        </h5>
     <div>
         <a th:href="@{'confirmServed-'+${o.id}}">
-            <button> Confirm that you have been Served correctly </button>
+            <button> Order Served </button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{'negativeResponseFromClient-'+${o.id}}">
+            <button> Add Negative Response </button>
+        </a>
+    </div>
+    <div>
+        <a th:href="@{'positiveResponsefromClient-'+${o.id}}">
+            <button> Add Positive Response </button>
         </a>
     </div>
     <div>
@@ -46,7 +69,7 @@
             <button> Delete Order </button>
         </a>
     </div>
-        </p>
+
     </li>
 </ul>
 

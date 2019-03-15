@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{main.css}" />
     <title>Add Menu</title>
 </head>
 <body>
@@ -10,7 +11,7 @@
 <h2 th:text="${restaurant.name}"> </h2>
 <h2 th:text="${restaurant.address}"> </h2>
 
-<h1>Add your Menu</h1>
+<h2>Add new meal to your Menu</h2>
 
 <form action="/saveMeal" method="post">
 
@@ -24,16 +25,19 @@
         </option>
     </select>
 
-    <input type="text" name="name" placeholder="name"/>
+    <input type="text" name="name" placeholder="Meal name"/>
 
-    <input type="text" name="description" placeholder="description"/>
+    <input type="text" name="description" placeholder="Meal description"/>
 
-    <input type="text" name="quantity" placeholder="quantity"/>
+    <input type="text" name="quantity" placeholder="Meal quantity"/>
 
-    <input type="text" name="price" placeholder="price"/>
+    <input type="text" name="price" placeholder="Meal price"/>
 
     <input type="submit" name="" placeholder="" value="Add to my Menu"/>
 
+</form>
+<form action="/restaurants" method="get">
+    <input type="submit" name="" placeholder="" value="Get Back to Restraunt page "/>
 </form>
 
 </body>

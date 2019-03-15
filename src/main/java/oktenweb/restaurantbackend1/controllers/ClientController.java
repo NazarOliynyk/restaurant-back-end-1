@@ -52,6 +52,7 @@ public class ClientController {
         restaurants = restaurantDAO.findAll();
         List<Client> clients = new ArrayList<>();
         clients= clientDAO.findAll();
+
         for (Client client : clients) {
             if(client.getUsername().equals(username)&&
                     client.getPassword().equals(password)){
@@ -93,6 +94,9 @@ public class ClientController {
             orderChosen.setDate(new Date());
             orderChosen.setRestaurant(restaurantChosen);
             orderChosen.setClient(clientChosen);
+
+            orderChosen.setResponseFromClient(ResponseType.NEUTRAL);
+            orderChosen.setResponseFromRestaurant(ResponseType.NEUTRAL);
             orderMealDAO.save(orderChosen);
 
         return "menuForClient";
@@ -150,9 +154,9 @@ public class ClientController {
         order.setOrderStatus(OrderStatus.SERVED);
         orderMealDAO.save(order);
 
-        return "index";
+        return "client";
     }
-    @CrossOrigin(origins = "*")
+    //@CrossOrigin(origins = "*")
     @GetMapping("/deleteOrderByClient-{xxx}")
     public String deleteOrderByClient(Model model,
                                           @PathVariable("xxx") int orderId  ) {
@@ -167,7 +171,50 @@ public class ClientController {
         }
         orderMealDAO.delete(orderId);
 
-        return "index";
+        return "client";
+    }
+
+    @GetMapping("/negativeResponseFromClient-{xxx}")
+    public String negativeResponseFromClient(Model model,
+                                          @PathVariable("xxx") int orderId  ) {
+        OrderMeal order = orderMealDAO.findOne(orderId);
+        order.setResponseFromClient(ResponseType.NEGATIVE);
+        Restaurant restaurant = order.getRestaurant();
+        List<OrderMeal> negative = new ArrayList<>();
+        List<OrderMeal> positive = new ArrayList<>();
+        for (OrderMeal ord: restaurant.getOrders()) {
+            if(ord.getResponseFromClient().equals(ResponseType.NEGATIVE)){
+                negative.add(ord);
+            }else if(ord.getResponseFromClient().equals(ResponseType.POSITIVE)) {
+                positive.add(ord);}
+        }
+        restaurant.setNumberOfNegativeResp(negative.size());
+        restaurant.setNumberOfPositiveResp(positive.size());
+        restaurantDAO.save(restaurant);
+        orderMealDAO.save(order);
+
+        return "client";
+    }
+    @GetMapping("/positiveResponsefromClient-{xxx}")
+    public String positiveResponsefromClient(Model model,
+                                   @PathVariable("xxx") int orderId  ) {
+        OrderMeal order = orderMealDAO.findOne(orderId);
+        order.setResponseFromClient(ResponseType.POSITIVE);
+        Restaurant restaurant = order.getRestaurant();
+        List<OrderMeal> negative = new ArrayList<>();
+        List<OrderMeal> positive = new ArrayList<>();
+        for (OrderMeal ord: restaurant.getOrders()) {
+            if(ord.getResponseFromClient().equals(ResponseType.NEGATIVE)){
+                negative.add(ord);
+            }else if(ord.getResponseFromClient().equals(ResponseType.POSITIVE)) {
+                positive.add(ord);}
+        }
+        restaurant.setNumberOfNegativeResp(negative.size());
+        restaurant.setNumberOfPositiveResp(positive.size());
+        restaurantDAO.save(restaurant);
+        orderMealDAO.save(order);
+
+        return "client";
     }
 
 }

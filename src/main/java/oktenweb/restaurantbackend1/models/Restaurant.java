@@ -28,6 +28,8 @@ public class Restaurant {
      String email;
      String phoneNumber;
      String additionalInfo;
+     int numberOfPositiveResp;
+     int numberOfNegativeResp;
 
     @JsonIgnore
     @OneToMany(

@@ -24,6 +24,8 @@ public class Client {
     String username;
     String password;
     String email;
+    int numberOfPositiveResp;
+    int numberOfNegativeResp;
 
     @JsonIgnore
     @OneToMany(
