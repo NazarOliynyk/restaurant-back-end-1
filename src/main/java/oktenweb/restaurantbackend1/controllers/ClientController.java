@@ -5,11 +5,13 @@ import oktenweb.restaurantbackend1.dao.MealDAO;
 import oktenweb.restaurantbackend1.dao.OrderMealDAO;
 import oktenweb.restaurantbackend1.dao.RestaurantDAO;
 import oktenweb.restaurantbackend1.models.*;
+import oktenweb.restaurantbackend1.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +27,8 @@ public class ClientController {
     private RestaurantDAO restaurantDAO;
     @Autowired
     private MealDAO mealDAO;
+    @Autowired
+    private EmailService emailService;
 
     private Client clientChosen = new Client();
     private Restaurant restaurantChosen = new Restaurant();
@@ -137,7 +141,7 @@ public class ClientController {
         }
 
         @GetMapping("/saveOrder")
-        public String saveOrder(Model model){
+        public String saveOrder(Model model) throws MessagingException {
 
             model.addAttribute("restaurant", restaurantChosen);
             model.addAttribute("mealsCreated", mealsCreated);
@@ -145,8 +149,11 @@ public class ClientController {
             Client client = clientDAO.findOne(clientChosen.getId());
             List<OrderMeal> orderMeals = client.getOrders();
             model.addAttribute("orders", orderMeals);
+            emailService.sendEmail(restaurantChosen.getEmail());
             return "createOrder";
         }
+
+
     @GetMapping("/confirmServed-{xxx}")
     public String cancelOrderByRestaurant(Model model,
                                           @PathVariable("xxx") int orderId  ) {
