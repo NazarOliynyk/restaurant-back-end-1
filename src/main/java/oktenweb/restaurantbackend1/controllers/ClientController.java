@@ -5,7 +5,8 @@ import oktenweb.restaurantbackend1.dao.MealDAO;
 import oktenweb.restaurantbackend1.dao.OrderMealDAO;
 import oktenweb.restaurantbackend1.dao.RestaurantDAO;
 import oktenweb.restaurantbackend1.models.*;
-import oktenweb.restaurantbackend1.services.EmailService;
+//import oktenweb.restaurantbackend1.services.EmailService;
+import oktenweb.restaurantbackend1.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +28,21 @@ public class ClientController {
     private RestaurantDAO restaurantDAO;
     @Autowired
     private MealDAO mealDAO;
+
+//    @Autowired
+//    private EmailService emailService;
+
     @Autowired
-    private EmailService emailService;
+    private MailService mailService;
 
     private Client clientChosen = new Client();
     private Restaurant restaurantChosen = new Restaurant();
     private List<Meal> mealsCreated = new ArrayList<>();
     private OrderMeal orderChosen = new OrderMeal();
+
+            String newOrder = "<div>\n" +
+                "    <a href=\"http://localhost:8080/restaurants\" target=\"_blank\"> You have just got a new order </a>\n" +
+                "</div>";
 
     @PostMapping("/saveClient")
     public String saveClient(@RequestParam("username") String username,
@@ -149,7 +158,9 @@ public class ClientController {
             Client client = clientDAO.findOne(clientChosen.getId());
             List<OrderMeal> orderMeals = client.getOrders();
             model.addAttribute("orders", orderMeals);
-            emailService.sendEmail(restaurantChosen.getEmail());
+
+            mailService.send(restaurantChosen.getEmail(), newOrder);
+           // emailService.sendEmail(restaurantChosen.getEmail());
             return "createOrder";
         }
 

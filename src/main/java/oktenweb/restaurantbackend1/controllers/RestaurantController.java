@@ -2,6 +2,8 @@ package oktenweb.restaurantbackend1.controllers;
 
 import oktenweb.restaurantbackend1.dao.*;
 import oktenweb.restaurantbackend1.models.*;
+import oktenweb.restaurantbackend1.reader.Reader;
+import oktenweb.restaurantbackend1.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +26,18 @@ public class RestaurantController {
     private MenuSectionDAO menuSectionDAO;
     @Autowired
     private OrderMealDAO orderMealDAO;
+    @Autowired
+    private MailService mailService;
 
     private Restaurant restaurantChosen = new Restaurant();
+
+    Reader r = new Reader();
+
+    String orderAccepted = "<div>\n" +
+            "    <a href=\"http://localhost:8080/clients\" target=\"_blank\"> Your order is in process now </a>\n" +
+            "</div>";
+
+    //String order =
 
     @PostMapping("/saveRestaurant")
     public String saveRestaurant(
@@ -140,7 +152,27 @@ public class RestaurantController {
         meal.setName(name);
         meal.setDescription(description);
         meal.setQuantity(quantity);
-        meal.setPrice(Double.parseDouble(price));
+        try {
+
+            meal.setPrice(Double.parseDouble(price));
+        }catch (NumberFormatException e){
+            System.out.println(e);
+            r.reply("Type numbers only!!");
+            List<String> menuSections = new ArrayList<>();
+            if(menuSectionObjects == null){
+                menuSections.add("No Menu Sections added yet!");
+            }else {
+                for (MenuSection menuSectionObject1 : menuSectionObjects) {
+                    menuSections.add(menuSectionObject1.getName());
+                }
+            }
+            model.addAttribute("restaurant", restaurantChosen);
+            model.addAttribute("menuSections", menuSections);
+
+            return "addMenu";
+
+        }
+
         meal.setRestaurant(restaurantChosen);
         meal.setMenuSection(menuSectionObject);
         mealDAO.save(meal);
@@ -177,6 +209,7 @@ public class RestaurantController {
         model.addAttribute("menuSections", menuSections);
         return "addMenu";
     }
+
     @PostMapping("/watchToMenu")
     public String watchToMenu(Model model,
                               @RequestParam("restaurantName") String restaurantName){
@@ -197,13 +230,15 @@ public class RestaurantController {
         return "orderListForRestaurant";
     }
 
+
     @GetMapping("/acceptOrderToKitchen-{xxx}")
     public String acceptOrderToKitchen(Model model,
                                        @PathVariable("xxx") int orderId){
         OrderMeal order = orderMealDAO.findOne(orderId);
         order.setOrderStatus(OrderStatus.IN_PROCESS);
         orderMealDAO.save(order);
-
+        Client client = order.getClient();
+        mailService.send(client.getEmail(), orderAccepted);
         return "restaurant";
     }
     @GetMapping("/cancelOrderByRestaurant-{xxx}")
@@ -217,6 +252,7 @@ public class RestaurantController {
 
         return "restaurant";
     }
+
     @GetMapping("/negativeResponseFromRestaurant-{xxx}")
     public String negativeResponseFromRestaurant(Model model,
                                    @PathVariable("xxx") int orderId  ) {

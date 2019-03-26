@@ -23,12 +23,16 @@ public class OrderMeal implements Comparable<OrderMeal>{
     private int id;
     Date date;
     String reasonOfCancelation;
+
     @Enumerated(EnumType.STRING)
     OrderStatus orderStatus;
+
     @Enumerated(EnumType.STRING)
     ResponseType responseFromClient;
+
     @Enumerated(EnumType.STRING)
     ResponseType responseFromRestaurant;
+
     String descriptionFromClient;
     String descriptionFromRestaurant;
 
