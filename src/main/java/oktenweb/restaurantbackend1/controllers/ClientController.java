@@ -159,7 +159,7 @@ public class ClientController {
             List<OrderMeal> orderMeals = client.getOrders();
             model.addAttribute("orders", orderMeals);
 
-            mailService.send(restaurantChosen.getEmail(), newOrder);
+           // mailService.send(restaurantChosen.getEmail(), newOrder);
            // emailService.sendEmail(restaurantChosen.getEmail());
             return "createOrder";
         }

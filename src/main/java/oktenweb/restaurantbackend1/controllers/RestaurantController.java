@@ -238,7 +238,7 @@ public class RestaurantController {
         order.setOrderStatus(OrderStatus.IN_PROCESS);
         orderMealDAO.save(order);
         Client client = order.getClient();
-        mailService.send(client.getEmail(), orderAccepted);
+      //  mailService.send(client.getEmail(), orderAccepted);
         return "restaurant";
     }
     @GetMapping("/cancelOrderByRestaurant-{xxx}")
